@@ -18,6 +18,6 @@ deploy:
   token: $KAMP_BUILD
   edge: true
   verbose: true
-  local_dir: /home/travis/build/KAMP-Research/KAMP/releng/edu.kit.ipd.sdq.kamp.updatesite/target
+  local_dir: /home/travis/build/KAMP-Research/KAMP/releng/edu.kit.ipd.sdq.kamp.updatesite/target/repository
 
 script: mvn clean verify -Dmaven.test.skip=true
