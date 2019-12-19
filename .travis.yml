@@ -8,8 +8,8 @@ cache:
 before_install:
     - git clone --depth 1 https://github.com/kit-sdq/BuildUtilities.git /tmp/BuildUtilities
     - . /tmp/BuildUtilities/travis-ci/setupenvironment.sh
-    - git clone https://github.com/SebastianWeberKamp/KAMPBuildUtilities.git /tmp/KAMPBuildUtilities
-    - . /tmp/KAMPBuildUtilities/setupsubprojects.sh "https://github.com/SebastianWeberKamp/KAMP4APS.git SebastianWeberKamp/KAMP/bundles/KAMP4APS edu.kit.ipd.sdq.kamp4aps.feature KAMP4APS" "https://github.com/SebastianWeberKamp/KAMP4BP.git SebastianWeberKamp/KAMP/bundles/KAMP4BP edu.kit.ipd.sdq.kamp4bp.feature KAMP4BP" "https://github.com/SebastianWeberKamp/KAMP4HMI.git SebastianWeberKamp/KAMP/bundles/KAMP4HMI edu.kit.ipd.sdq.kamp4hmi.feature KAMP4HMI" "https://github.com/SebastianWeberKamp/KAMP4IEC.git SebastianWeberKamp/KAMP/bundles/KAMP4IEC edu.kit.ipd.sdq.kamp4iec.feature KAMP4IEC" "https://github.com/SebastianWeberKamp/KAMP4IS.git SebastianWeberKamp/KAMP/bundles/KAMP4IS edu.kit.ipd.sdq.kamp4is.feature KAMP4IS"
+    - git clone https://github.com/KAMP-Research/KAMP_BuildUtilities.git /tmp/KAMP_BuildUtilities
+    - . /tmp/KAMP_BuildUtilities/setupsubprojects.sh "https://github.com/KAMP-Research/KAMP4APS.git KAMP-Research/KAMP/bundles/KAMP4APS edu.kit.ipd.sdq.kamp4aps.feature KAMP4APS" "https://github.com/KAMP-Research/KAMP4BP.git KAMP-Research/KAMP/bundles/KAMP4BP edu.kit.ipd.sdq.kamp4bp.feature KAMP4BP" "https://github.com/KAMP-Research/KAMP4HMI.git KAMP-Research/KAMP/bundles/KAMP4HMI edu.kit.ipd.sdq.kamp4hmi.feature KAMP4HMI" "https://github.com/KAMP-Research/KAMP4IEC.git KAMP-Research/KAMP/bundles/KAMP4IEC edu.kit.ipd.sdq.kamp4iec.feature KAMP4IEC" "https://github.com/KAMP-Research/KAMP4IS.git KAMP-Research/KAMP/bundles/KAMP4IS edu.kit.ipd.sdq.kamp4is.feature KAMP4IS"
 
 install: true
 
@@ -18,6 +18,6 @@ deploy:
   token: $KAMP_BUILD
   edge: true
   verbose: true
-  local_dir: /home/travis/build/SebastianWeberKamp/KAMP/releng/edu.kit.ipd.sdq.kamp.updatesite/target/repository
+  local_dir: /home/travis/build/KAMP-Research/KAMP/releng/edu.kit.ipd.sdq.kamp.updatesite/target/repository
 
 script: mvn clean verify -Dmaven.test.skip=true
