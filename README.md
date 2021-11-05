@@ -5,9 +5,9 @@ KAMP is an approach to analyze the change propagation in a software system from 
 ## Install
 
 * Download [Eclipse Modeling Framework](http://www.eclipse.org/downloads/packages/eclipse-modeling-tools/neon3).  
-* Install [Palladio](https://sdqweb.ipd.kit.edu/eclipse/palladiosimulator/nightly/) via Help > Install New Software.
-* Import the KAMP-Framework and Submodule Projects.
-OR
+* Install [Palladio](https://sdqweb.ipd.kit.edu/eclipse/palladiosimulator/nightly/) via Help > Install New Software.  
+* Import the KAMP-Framework and Submodule Projects.  
+OR  
 * Install from our [Update-Site](https://kamp-research.github.io/KAMP/)
 
 ## Submodules
