@@ -2,7 +2,7 @@ name: Build and Deploy Updatesite
 
 on:
   push:
-    branches: [ "setup-github-actions-build" ]
+    branches: [ "master" ]
   workflow_dispatch:
 
 permissions:
