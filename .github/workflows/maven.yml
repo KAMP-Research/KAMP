@@ -24,13 +24,13 @@ jobs:
 
     - name: Verify ZIP exists
       run: |
-        test -f KAMP/releng/edu.kit.ipd.sdq.kamp.updatesite/target/edu.kit.ipd.sdq.kamp.updatesite-0.1.0-SNAPSHOT.zip
+        test -f releng/edu.kit.ipd.sdq.kamp.updatesite/target/edu.kit.ipd.sdq.kamp.updatesite-0.1.0-SNAPSHOT.zip
 
     - name: Prepare Pages content
       run: |
         rm -rf pages-site
         mkdir -p pages-site
-        unzip -q KAMP/releng/edu.kit.ipd.sdq.kamp.updatesite/target/edu.kit.ipd.sdq.kamp.updatesite-0.1.0-SNAPSHOT.zip -d pages-site
+        unzip -q releng/edu.kit.ipd.sdq.kamp.updatesite/target/edu.kit.ipd.sdq.kamp.updatesite-0.1.0-SNAPSHOT.zip -d pages-site
         touch pages-site/.nojekyll
 
         cat > pages-site/index.html <<'EOF'
