@@ -6,6 +6,7 @@
 		<groupId>tools.mdsd</groupId>
 		<artifactId>eclipse-parent-product</artifactId>
 		<version>0.8.12</version>
+		<relativePath/>
 	</parent>
 	
 	<properties>
@@ -17,7 +18,7 @@
 	<modelVersion>4.0.0</modelVersion>   
 	<groupId>edu.kit.ipd.sdq.kamp</groupId>
 	<artifactId>parent</artifactId>	
-	<version>0.1.0-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
     <modules>
@@ -42,7 +43,7 @@
 		<repository>
 			<id>EMF Profiles</id>
 			<layout>p2</layout>
-			<url>https://updatesite.palladio-simulator.com/palladio-thirdparty-emfprofiles/releases/latest/</url>
+			<url>https://updatesite.palladio-simulator.com/palladio-thirdparty-emfprofiles/releases/5.2.1/</url>
 		</repository>
     </repositories>
 	<build>

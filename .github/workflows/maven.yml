@@ -1,4 +1,4 @@
-name: Build and Deploy Updatesite
+name: Build and Deploy Update Sites
 
 on:
   push:
@@ -16,61 +16,315 @@ concurrency:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-      
-    - name: Build update site
-      run: mvn -B -U clean verify
+      - name: Checkout KAMP
+        uses: actions/checkout@v4
+        with:
+          path: KAMP
 
-    - name: Verify ZIP exists
-      run: |
-        test -f releng/edu.kit.ipd.sdq.kamp.updatesite/target/edu.kit.ipd.sdq.kamp.updatesite-0.1.0-SNAPSHOT.zip
+      - name: Checkout KAMP4APS
+        uses: actions/checkout@v4
+        with:
+          repository: KAMP-Research/KAMP4APS
+          path: KAMP4APS
 
-    - name: Prepare Pages content
-      run: |
-        rm -rf pages-site
-        mkdir -p pages-site
-        unzip -q releng/edu.kit.ipd.sdq.kamp.updatesite/target/edu.kit.ipd.sdq.kamp.updatesite-0.1.0-SNAPSHOT.zip -d pages-site
-        touch pages-site/.nojekyll
+      - name: Checkout KAMP4BP
+        uses: actions/checkout@v4
+        with:
+          repository: KAMP-Research/KAMP4BP
+          path: KAMP4BP
 
-        cat > pages-site/index.html <<'EOF'
-        <!doctype html>
-        <html lang="en">
-        <head>
-          <meta charset="utf-8">
-          <title>KAMP Eclipse Update Site</title>
-        </head>
-        <body>
-          <h1>KAMP Eclipse Update Site</h1>
-          <ul>
-            <li><a href="content.jar">content.jar</a></li>
-            <li><a href="content.xml">content.xml</a></li>
-            <li><a href="artifacts.jar">artifacts.jar</a></li>
-            <li><a href="artifacts.xml">artifacts.xml</a></li>
-            <li><a href="features/">features/</a></li>
-            <li><a href="plugins/">plugins/</a></li>
-          </ul>
-        </body>
-        </html>
-        EOF
+      - name: Checkout KAMP4HMI
+        uses: actions/checkout@v4
+        with:
+          repository: KAMP-Research/KAMP4HMI
+          path: KAMP4HMI
 
-    - name: Setup Pages
-      uses: actions/configure-pages@v5
+      - name: Checkout KAMP4IEC
+        uses: actions/checkout@v4
+        with:
+          repository: KAMP-Research/KAMP4IEC
+          path: KAMP4IEC
 
-    - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: pages-site
+      - name: Checkout KAMP4IS
+        uses: actions/checkout@v4
+        with:
+          repository: KAMP-Research/KAMP4IS
+          path: KAMP4IS
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Create shared build reactor
+        run: |
+          cat > pom.xml <<'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <project xmlns="http://maven.apache.org/POM/4.0.0"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+            <modelVersion>4.0.0</modelVersion>
+            <groupId>edu.kit.ipd.sdq.kamp</groupId>
+            <artifactId>kamp-shared-build-reactor</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <packaging>pom</packaging>
+
+            <modules>
+              <module>KAMP</module>
+              <module>KAMP4APS</module>
+              <module>KAMP4BP</module>
+              <module>KAMP4HMI</module>
+              <module>KAMP4IEC</module>
+              <module>KAMP4IS</module>
+            </modules>
+          </project>
+          EOF
+
+      - name: Build KAMP and extensions
+        run: mvn -B -U clean verify
+
+      - name: Prepare Pages content
+        run: |
+          set -euo pipefail
+
+          rm -rf pages-site
+          mkdir -p pages-site/{kamp,kamp4aps,kamp4bp,kamp4hmi,kamp4iec,kamp4is,all}
+          touch pages-site/.nojekyll
+
+          unzip -q KAMP/releng/edu.kit.ipd.sdq.kamp.updatesite/target/edu.kit.ipd.sdq.kamp.updatesite-*.zip -d pages-site/kamp
+          unzip -q KAMP4APS/releng/edu.kit.ipd.sdq.kamp4aps.updatesite/target/edu.kit.ipd.sdq.kamp4aps.updatesite-*.zip -d pages-site/kamp4aps
+          unzip -q KAMP4BP/releng/edu.kit.ipd.sdq.kamp4bp.updatesite/target/edu.kit.ipd.sdq.kamp4bp.updatesite-*.zip -d pages-site/kamp4bp
+          unzip -q KAMP4HMI/releng/edu.kit.ipd.sdq.kamp4hmi.updatesite/target/edu.kit.ipd.sdq.kamp4hmi.updatesite-*.zip -d pages-site/kamp4hmi
+          unzip -q KAMP4IEC/releng/edu.kit.ipd.sdq.kamp4iec.updatesite/target/edu.kit.ipd.sdq.kamp4iec.updatesite-*.zip -d pages-site/kamp4iec
+          unzip -q KAMP4IS/releng/edu.kit.ipd.sdq.kamp4is.updatesite/target/edu.kit.ipd.sdq.kamp4is.updatesite-*.zip -d pages-site/kamp4is
+
+          P2_TIMESTAMP="$(date +%s%3N)"
+
+          cat > pages-site/all/compositeContent.xml <<EOF
+          <?xml version='1.0' encoding='UTF-8'?>
+          <?compositeMetadataRepository version='1.0.0'?>
+          <repository name='KAMP All Update Site' type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>
+            <properties size='1'>
+              <property name='p2.timestamp' value='${P2_TIMESTAMP}'/>
+            </properties>
+            <children size='6'>
+              <child location='../kamp'/>
+              <child location='../kamp4aps'/>
+              <child location='../kamp4bp'/>
+              <child location='../kamp4hmi'/>
+              <child location='../kamp4iec'/>
+              <child location='../kamp4is'/>
+            </children>
+          </repository>
+          EOF
+
+          cat > pages-site/all/compositeArtifacts.xml <<EOF
+          <?xml version='1.0' encoding='UTF-8'?>
+          <?compositeArtifactRepository version='1.0.0'?>
+          <repository name='KAMP All Update Site' type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' version='1.0.0'>
+            <properties size='1'>
+              <property name='p2.timestamp' value='${P2_TIMESTAMP}'/>
+            </properties>
+            <children size='6'>
+              <child location='../kamp'/>
+              <child location='../kamp4aps'/>
+              <child location='../kamp4bp'/>
+              <child location='../kamp4hmi'/>
+              <child location='../kamp4iec'/>
+              <child location='../kamp4is'/>
+            </children>
+          </repository>
+          EOF
+
+          cat > pages-site/index.html <<'EOF'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>KAMP Eclipse Update Sites</title>
+            <style>
+              :root {
+                color-scheme: light;
+                --ink: #18212f;
+                --muted: #5f6b7a;
+                --line: #d8dee8;
+                --surface: #ffffff;
+                --wash: #f4f7fb;
+                --accent: #0b6bcb;
+                --accent-dark: #084f97;
+              }
+              * {
+                box-sizing: border-box;
+              }
+              body {
+                margin: 0;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                color: var(--ink);
+                background: linear-gradient(180deg, #eef4fa 0, #ffffff 34rem);
+              }
+              main {
+                width: min(1080px, calc(100% - 32px));
+                margin: 0 auto;
+                padding: 56px 0;
+              }
+              header {
+                padding-bottom: 32px;
+                border-bottom: 1px solid var(--line);
+              }
+              h1 {
+                margin: 0 0 12px;
+                font-size: clamp(2rem, 4vw, 3.75rem);
+                line-height: 1.05;
+                letter-spacing: 0;
+              }
+              p {
+                margin: 0;
+                color: var(--muted);
+                font-size: 1.05rem;
+                line-height: 1.6;
+                max-width: 760px;
+              }
+              .sites {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 16px;
+                margin: 32px 0;
+              }
+              .site {
+                min-height: 180px;
+                padding: 20px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                background: var(--surface);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+              }
+              .site strong {
+                display: block;
+                margin-bottom: 8px;
+                font-size: 1.2rem;
+              }
+              .site span {
+                color: var(--muted);
+                line-height: 1.45;
+              }
+              a {
+                color: var(--accent);
+                font-weight: 650;
+                text-decoration: none;
+              }
+              a:hover {
+                color: var(--accent-dark);
+                text-decoration: underline;
+              }
+              code {
+                display: block;
+                margin-top: 10px;
+                padding: 10px 12px;
+                overflow-wrap: anywhere;
+                border-radius: 6px;
+                background: var(--wash);
+                color: #27364a;
+                font-size: .92rem;
+              }
+              section {
+                margin-top: 32px;
+              }
+              h2 {
+                margin: 0 0 12px;
+                font-size: 1.35rem;
+              }
+            </style>
+          </head>
+          <body>
+            <main>
+              <header>
+                <h1>KAMP Eclipse Update Sites</h1>
+                <p>Use the individual repositories for targeted installations, or use KAMP-All when Eclipse should resolve KAMP and all published extensions from one update site.</p>
+              </header>
+
+              <div class="sites">
+                <article class="site">
+                  <div>
+                    <strong>KAMP-All</strong>
+                    <span>Composite update site for KAMP and all extensions.</span>
+                    <code>https://kamp-research.github.io/KAMP/all/</code>
+                  </div>
+                  <a href="all/">Open update site</a>
+                </article>
+                <article class="site">
+                  <div>
+                    <strong>KAMP</strong>
+                    <span>Core KAMP update site.</span>
+                    <code>https://kamp-research.github.io/KAMP/kamp/</code>
+                  </div>
+                  <a href="kamp/">Open update site</a>
+                </article>
+                <article class="site">
+                  <div>
+                    <strong>KAMP4APS</strong>
+                    <span>Automation production systems extension update site.</span>
+                    <code>https://kamp-research.github.io/KAMP/kamp4aps/</code>
+                  </div>
+                  <a href="kamp4aps/">Open update site</a>
+                </article>
+                <article class="site">
+                  <div>
+                    <strong>KAMP4BP</strong>
+                    <span>Business process extension update site.</span>
+                    <code>https://kamp-research.github.io/KAMP/kamp4bp/</code>
+                  </div>
+                  <a href="kamp4bp/">Open update site</a>
+                </article>
+                <article class="site">
+                  <div>
+                    <strong>KAMP4HMI</strong>
+                    <span>Human-machine-interface extension update site.</span>
+                    <code>https://kamp-research.github.io/KAMP/kamp4hmi/</code>
+                  </div>
+                  <a href="kamp4hmi/">Open update site</a>
+                </article>
+                <article class="site">
+                  <div>
+                    <strong>KAMP4IEC</strong>
+                    <span>IEC extension update site.</span>
+                    <code>https://kamp-research.github.io/KAMP/kamp4iec/</code>
+                  </div>
+                  <a href="kamp4iec/">Open update site</a>
+                </article>
+                <article class="site">
+                  <div>
+                    <strong>KAMP4IS</strong>
+                    <span>Information systems extension update site.</span>
+                    <code>https://kamp-research.github.io/KAMP/kamp4is/</code>
+                  </div>
+                  <a href="kamp4is/">Open update site</a>
+                </article>
+              </div>
+
+              <section>
+                <h2>Installation</h2>
+                <p>In Eclipse, open <strong>Help &gt; Install New Software...</strong> and paste one of the update-site URLs above into the <strong>Work with</strong> field.</p>
+              </section>
+            </main>
+          </body>
+          </html>
+          EOF
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages-site
 
   deploy:
     environment:
