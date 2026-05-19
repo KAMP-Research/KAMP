@@ -16,6 +16,31 @@
 		<module>edu.kit.ipd.sdq.kamp.model.modificationmarks</module>
 		<module>edu.kit.ipd.sdq.kamp.model.modificationmarks.edit</module>
 		<module>edu.kit.ipd.sdq.kamp.model.modificationmarks.editor</module>
+		<module>Toometa/de.uka.ipd.sdq.dsexplore.qml.dimensiontypes</module>
+		<module>Toometa/de.uka.ipd.sdq.dsexplore.qml.dimensiontypes.edit</module>
+		<module>Toometa/de.uka.ipd.sdq.dsexplore.qml.dimensions</module>
+		<module>Toometa/de.uka.ipd.sdq.dsexplore.qml.dimensions.edit</module>
+		<module>Toometa/de.uka.ipd.sdq.dsexplore.qml.units</module>
+		<module>Toometa/de.uka.ipd.sdq.dsexplore.qml.units.edit</module>
+		<module>Toometa/de.uka.ipd.sdq.namedelement</module>
+		<module>Toometa/de.uka.ipd.sdq.namedelement.edit</module>
+		<module>Toometa/toometa.archoptions</module>
+		<module>Toometa/toometa.decisions</module>
+		<module>Toometa/toometa.decisions.edit</module>
+		<module>Toometa/toometa.effects</module>
+		<module>Toometa/toometa.effects.edit</module>
+		<module>Toometa/toometa.glossary</module>
+		<module>Toometa/toometa.glossary.edit</module>
+		<module>Toometa/toometa.options</module>
+		<module>Toometa/toometa.options.edit</module>
+		<module>Toometa/toometa.pcmbpoptions</module>
+		<module>Toometa/toometa.pcmarchoptions</module>
+		<module>Toometa/toometa.qualities</module>
+		<module>Toometa/toometa.qualities.edit</module>
+		<module>Toometa/toometa.relations</module>
+		<module>Toometa/toometa.relations.edit</module>
+		<module>Toometa/toometa.requirements</module>
+		<module>Toometa/toometa.requirements.edit</module>
 	</modules>
 	
 </project>
