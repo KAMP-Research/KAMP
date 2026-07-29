@@ -30,6 +30,12 @@ jobs:
           repository: KAMP-Research/KAMP4APS
           path: KAMP4APS
 
+      - name: Checkout KAMP4AS
+        uses: actions/checkout@v4
+        with:
+          repository: KAMP-Research/KAMP4AS
+          path: KAMP4AS
+
       - name: Checkout KAMP4BP
         uses: actions/checkout@v4
         with:
@@ -83,6 +89,7 @@ jobs:
             <modules>
               <module>KAMP</module>
               <module>KAMP4APS</module>
+              <module>KAMP4AS</module>
               <module>KAMP4BP</module>
               <module>KAMP4HMI</module>
               <module>KAMP4IEC</module>
@@ -100,11 +107,12 @@ jobs:
           set -euo pipefail
 
           rm -rf pages-site
-          mkdir -p pages-site/{kamp,kamp4aps,kamp4bp,kamp4hmi,kamp4iec,kamp4is,kamp4req,all}
+          mkdir -p pages-site/{kamp,kamp4aps,kamp4as,kamp4bp,kamp4hmi,kamp4iec,kamp4is,kamp4req,all}
           touch pages-site/.nojekyll
 
           unzip -q KAMP/releng/edu.kit.ipd.sdq.kamp.updatesite/target/edu.kit.ipd.sdq.kamp.updatesite-*.zip -d pages-site/kamp
           unzip -q KAMP4APS/releng/edu.kit.ipd.sdq.kamp4aps.updatesite/target/edu.kit.ipd.sdq.kamp4aps.updatesite-*.zip -d pages-site/kamp4aps
+          unzip -q KAMP4AS/releng/edu.kit.ipd.sdq.kamp4as.updatesite/target/edu.kit.ipd.sdq.kamp4as.updatesite-*.zip -d pages-site/kamp4as
           unzip -q KAMP4BP/releng/edu.kit.ipd.sdq.kamp4bp.updatesite/target/edu.kit.ipd.sdq.kamp4bp.updatesite-*.zip -d pages-site/kamp4bp
           unzip -q KAMP4HMI/releng/edu.kit.ipd.sdq.kamp4hmi.updatesite/target/edu.kit.ipd.sdq.kamp4hmi.updatesite-*.zip -d pages-site/kamp4hmi
           unzip -q KAMP4IEC/releng/edu.kit.ipd.sdq.kamp4iec.updatesite/target/edu.kit.ipd.sdq.kamp4iec.updatesite-*.zip -d pages-site/kamp4iec
@@ -120,9 +128,10 @@ jobs:
             <properties size='1'>
               <property name='p2.timestamp' value='${P2_TIMESTAMP}'/>
             </properties>
-            <children size='7'>
+            <children size='8'>
               <child location='../kamp'/>
               <child location='../kamp4aps'/>
+              <child location='../kamp4as'/>
               <child location='../kamp4bp'/>
               <child location='../kamp4hmi'/>
               <child location='../kamp4iec'/>
@@ -139,9 +148,10 @@ jobs:
             <properties size='1'>
               <property name='p2.timestamp' value='${P2_TIMESTAMP}'/>
             </properties>
-            <children size='7'>
+            <children size='8'>
               <child location='../kamp'/>
               <child location='../kamp4aps'/>
+              <child location='../kamp4as'/>
               <child location='../kamp4bp'/>
               <child location='../kamp4hmi'/>
               <child location='../kamp4iec'/>
@@ -314,12 +324,13 @@ jobs:
 
           create_update_site_page "kamp" "KAMP" "Core KAMP update site with the base change-propagation framework and modification mark models." "https://kamp-research.github.io/KAMP/kamp/" "Contains the core KAMP feature, modification mark model, edit/editor support, and the base infrastructure required by extension update sites."
           create_update_site_page "kamp4aps" "KAMP4APS" "KAMP extension for automated production systems and automation plant change propagation." "https://kamp-research.github.io/KAMP/kamp4aps/" "Contains APS domain models, deployment context models, field-of-activity annotations, modification marks, and generated EMF tooling."
+          create_update_site_page "kamp4as" "KAMP4AS" "KAMP extension for automotive E/E architectures and hardware-aware change propagation." "https://kamp-research.github.io/KAMP/kamp4as/" "Contains the automotive hardware model (ECUs, DCUs, sensors, actuators, buses, gateways, signals, power rails, wiring harness, SOA services), the software-to-hardware deployment model, field-of-activity annotations, modification marks, ARXML and SysML v2 import/export, Excel and graph export, and the Sirius editor."
           create_update_site_page "kamp4bp" "KAMP4BP" "KAMP extension for business-process models connected to Palladio Component Model assets." "https://kamp-research.github.io/KAMP/kamp4bp/" "Contains business-process PCM extensions, data and organization models, field-of-activity annotations, modification marks, and generated EMF tooling."
           create_update_site_page "kamp4hmi" "KAMP4HMI" "KAMP extension for human-machine-interface process models and their relation to IEC software artifacts." "https://kamp-research.github.io/KAMP/kamp4hmi/" "Contains HMI workflow models, mode and condition concepts, HMI modification marks, and generated EMF tooling."
           create_update_site_page "kamp4iec" "KAMP4IEC" "KAMP extension for IEC 61131-style PLC software repositories and change propagation." "https://kamp-research.github.io/KAMP/kamp4iec/" "Contains IEC repository models, program/configuration models, field-of-activity annotations, modification marks, and generated EMF tooling."
           create_update_site_page "kamp4is" "KAMP4IS" "KAMP extension for information systems, PCM models, and component-internal dependencies." "https://kamp-research.github.io/KAMP/kamp4is/" "Contains IS modification marks, field-of-activity annotations, component-internal dependency models, and generated EMF tooling."
           create_update_site_page "kamp4req" "KAMP4REQ" "KAMP extension for requirements, decisions, options, and traceable requirement artefacts." "https://kamp-research.github.io/KAMP/kamp4req/" "Contains requirement-specific modification marks, edit/editor support, and generated EMF tooling for requirement change propagation."
-          create_update_site_page "all" "KAMP-All" "Composite update site for KAMP and all published extension update sites." "https://kamp-research.github.io/KAMP/all/" "References the KAMP, KAMP4APS, KAMP4BP, KAMP4HMI, KAMP4IEC, KAMP4IS, and KAMP4REQ update sites so Eclipse can resolve the full published KAMP ecosystem from one URL."
+          create_update_site_page "all" "KAMP-All" "Composite update site for KAMP and all published extension update sites." "https://kamp-research.github.io/KAMP/all/" "References the KAMP, KAMP4APS, KAMP4AS, KAMP4BP, KAMP4HMI, KAMP4IEC, KAMP4IS, and KAMP4REQ update sites so Eclipse can resolve the full published KAMP ecosystem from one URL."
 
           cat > pages-site/index.html <<'EOF'
           <!doctype html>
@@ -489,6 +500,17 @@ jobs:
                     </div>
                   </div>
                   <a href="kamp4aps/">Open update site</a>
+                </article>
+                <article class="site">
+                  <div>
+                    <strong>KAMP4AS</strong>
+                    <span>Automotive E/E architecture extension update site.</span>
+                    <div class="url-row">
+                      <code>https://kamp-research.github.io/KAMP/kamp4as/</code>
+                      <button type="button" data-copy="https://kamp-research.github.io/KAMP/kamp4as/">Copy</button>
+                    </div>
+                  </div>
+                  <a href="kamp4as/">Open update site</a>
                 </article>
                 <article class="site">
                   <div>

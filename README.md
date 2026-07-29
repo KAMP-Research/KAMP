@@ -11,6 +11,9 @@ OR
 * Install from our [Update-Site](https://kamp-research.github.io/KAMP/)
 
 ## Submodules
+### KAMP for Automotive Systems
+https://github.com/KAMP-Research/KAMP4AS  
+
 ### KAMP for Information Systems
 https://github.com/KAMP-Research/KAMP4IS  
 
